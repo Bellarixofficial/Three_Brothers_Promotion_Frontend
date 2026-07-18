@@ -1,6 +1,6 @@
-# Fobet Media Frontend
+# Three Brothers Promotion Frontend
 
-A highly dynamic, performant, and beautifully designed frontend application for Fobet Media, built with React and Vite. This application integrates seamlessly with the NestJS backend to serve dynamic content across public-facing sections while maintaining an immersive, high-fidelity visual experience.
+A highly dynamic, performant, and beautifully designed frontend application for Three Brothers Promotion, built with React and Vite. This application integrates seamlessly with the NestJS backend to serve dynamic content across public-facing sections while maintaining an immersive, high-fidelity visual experience.
 
 ## Features
 
@@ -21,7 +21,7 @@ A highly dynamic, performant, and beautifully designed frontend application for 
 ## Project Structure
 
 ```text
-fobetmedia-react/
+three-brothers-promotion-react/
 ├── public/                 # Static assets that don't require bundling
 ├── src/
 │   ├── assets/             # Images, SVGs, and other bundled assets
@@ -47,13 +47,13 @@ fobetmedia-react/
 
 ### Prerequisites
 - Node.js (v18 or higher recommended)
-- The Fobet Media Backend (NestJS) running locally or hosted online.
+- The Three Brothers Promotion Backend (NestJS) running locally or hosted online.
 
 ### Installation
 
 1. Clone or navigate to the project directory:
    ```bash
-   cd fobetmedia-react
+   cd three-brothers-promotion-react
    ```
 2. Install the dependencies:
    ```bash

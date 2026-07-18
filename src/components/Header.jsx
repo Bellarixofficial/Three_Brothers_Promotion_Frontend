@@ -81,7 +81,7 @@ export default function Header() {
             ))}
             {/* <li>
               <a
-                href="https://fobetmedia.com/career/"
+                href="https://threebrotherspromotion.com/career/"
                 className="careers-link"
                 target="_blank"
                 rel="noopener noreferrer"
