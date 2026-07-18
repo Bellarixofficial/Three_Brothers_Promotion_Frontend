@@ -1,0 +1,189 @@
+import { useState, useEffect } from 'react';
+import { api } from '../services/api';
+import Skeleton from './Skeleton';
+import ScrollReveal from './ScrollReveal';
+import './PackagesSection.css';
+
+export default function PackagesSection() {
+  const [apiData, setApiData] = useState(null);
+  const [heroData, setHeroData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [packRes, heroRes] = await Promise.all([
+          api.getSectionData('packages-section'),
+          api.getSectionData('hero-section')
+        ]);
+        if (packRes) setApiData(packRes);
+        if (heroRes) setHeroData(heroRes);
+      } catch (err) {
+        console.error("Failed to load section data in PackagesSection", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const phone = heroData?.whatsappNumber ? heroData.whatsappNumber.replace(/\D/g, '') : '917020061418';
+
+  const getWaUrl = (heading) => {
+    const isMentorship = heading.toLowerCase().includes('mentorship');
+    const msg = isMentorship 
+      ? 'Hi, I would like to book a 1:1 Mentorship Session with Vibhav Raj.' 
+      : `Hi, I'm interested in the ${heading} package.`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const getDynamicWaUrl = (p) => {
+    const msg = `Hi, I want to know more about the "${p.heading}" plan (Price: ₹${p.price}, Tagline: ${p.desc}). I'd like to explore this plan.`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const hasDynamicPackages = apiData?.packData?.length > 0;
+
+  return (
+    <div className="packages-section-wrapper" id="packages">
+      <section className="packages-section">
+        <div className="packages-glow glow-center" />
+
+        <ScrollReveal className="packages-header">
+          <div className="packages-badge">
+            {loading ? <Skeleton width="120px" height="1em" /> : (apiData?.packTag || 'PRICING PLANS')}
+          </div>
+          <h2 className="packages-title">
+            {loading ? (
+              <Skeleton width="60%" height="1.5em" />
+            ) : apiData?.heading1 ? (
+              <>
+                {apiData.heading1} <span className="gradient-text">{apiData.heading2}</span>
+              </>
+            ) : (
+              <>
+                Our <span className="gradient-text">Packages</span>
+              </>
+            )}
+          </h2>
+          <p className="packages-desc">
+            {loading ? <Skeleton width="80%" /> : (apiData?.desc || 'Choose the package that fits your growth stage')}
+          </p>
+        </ScrollReveal>
+
+        <div className="packages-row">
+          {loading ? (
+            Array(2).fill(0).map((_, i) => (
+              <div key={i} className="package-card">
+                <Skeleton width="60%" height="1.5em" style={{ marginBottom: '20px' }} />
+                <Skeleton width="40%" height="2em" style={{ marginBottom: '20px' }} />
+                <Skeleton type="text" width="80%" />
+                <Skeleton type="text" width="90%" />
+                <div className="package-line" style={{ margin: '20px 0' }} />
+                <Skeleton type="text" width="100%" />
+                <Skeleton type="text" width="100%" />
+                <Skeleton type="text" width="100%" />
+                <Skeleton type="btn" style={{ marginTop: 'auto' }} />
+              </div>
+            ))
+          ) : hasDynamicPackages ? (
+            apiData.packData.map((p, i) => (
+              <ScrollReveal key={i} style={{ flex: 1, minWidth: '320px', maxWidth: '400px', display: 'flex' }} delay={i * 150}>
+                <div className={`package-card ${p.badge ? 'featured' : ''}`} style={{ width: '100%' }}>
+                  {p.badge && <div className="package-tag tag-popular">{p.badge}</div>}
+                  <div className="package-name">{p.heading}</div>
+                  <div className="package-price">₹
+                    {p.price.split('/').map((part, pi) => (
+                      pi === 0 ? part : <span key={pi}>/{part}</span>
+                    ))}
+                  </div>
+                  <p className="package-desc">{p.desc}</p>
+                  <div className="package-line" />
+
+                  {p.guaranteeTitle && (
+                    <div className="guarantee-box">
+                      <div className="guarantee-title"><i className="fa-solid fa-shield-check" /> {p.guaranteeTitle}</div>
+                      <div className="guarantee-text">{p.guaranteeText}</div>
+                    </div>
+                  )}
+
+                  {p.tag1 && <div className="highlight-text">{p.tag1}</div>}
+                  <ul className="package-features">
+                    {(p.points || []).map((feat, fi) => (
+                      <li key={fi}><i className="fa-solid fa-check" />
+                        <span dangerouslySetInnerHTML={{ __html: feat }} />
+                      </li>
+                    ))}
+                  </ul>
+                  {p.tag2 && (
+                    <div className="highlight-text" style={{ marginTop: 'auto' }}>
+                      <span dangerouslySetInnerHTML={{ __html: p.tag2.replace(/\\n/g, '<br/>') }} />
+                    </div>
+                  )}
+                  <a href={getDynamicWaUrl(p)} target="_blank" rel="noopener noreferrer" className={`package-btn ${p.badge ? 'btn-filled' : 'btn-outline'}`}>
+                    {p.btnName || 'Get Started'}
+                  </a>
+                </div>
+              </ScrollReveal>
+            ))
+          ) : (
+            <>
+              {/* Card 1: 1:1 Mentorship */}
+              <ScrollReveal style={{ flex: 1, minWidth: '320px', maxWidth: '400px', display: 'flex' }} delay={0}>
+                <div className="package-card" style={{ width: '100%' }}>
+                  <div className="package-name">1:1 Mentorship Session</div>
+                  <div className="package-price">₹45,000</div>
+                  <p className="package-desc">A direct clarity session to fix your brand direction.</p>
+                  <div className="package-line" />
+                  <div className="highlight-text">with Vibhav Raj</div>
+                  <ul className="package-features">
+                    <li><i className="fa-solid fa-check" />Brand positioning: who you are &amp; how people should see you</li>
+                    <li><i className="fa-solid fa-check" />Clear content pillars &amp; storytelling style</li>
+                    <li><i className="fa-solid fa-check" />Exact audience &amp; niche clarity</li>
+                    <li><i className="fa-solid fa-check" />6-month growth roadmap</li>
+                    <li><i className="fa-solid fa-check" />Script &amp; hook structuring</li>
+                    <li><i className="fa-solid fa-check" />Shoot style, what to avoid, on-camera guidance</li>
+                    <li><i className="fa-solid fa-check" />Page audit: what's working vs what's blocking growth</li>
+                    <li><i className="fa-solid fa-check" />Monetisation plan: brand deals, courses, consulting</li>
+                  </ul>
+                  <div className="highlight-text" style={{ marginTop: 'auto' }}>A personalised blueprint for YOUR growth.</div>
+                  <a href={getWaUrl('1:1 Mentorship Session')} target="_blank" rel="noopener noreferrer" className="package-btn btn-outline">Get Started</a>
+                </div>
+              </ScrollReveal>
+
+              {/* Card 2: Complete Creator Growth (featured) */}
+              <ScrollReveal style={{ flex: 1, minWidth: '320px', maxWidth: '400px', display: 'flex' }} delay={150}>
+                <div className="package-card featured" style={{ width: '100%' }}>
+                  <div className="package-tag tag-popular">Most Popular</div>
+                  <div className="package-name">Complete Creator Growth</div>
+                  <div className="package-price">₹4,00,000<span>/month</span></div>
+                  <p className="package-desc">Done-for-you creator growth. You just show up.</p>
+                  <div className="package-line" />
+
+                  <div className="guarantee-box">
+                    <div className="guarantee-title"><i className="fa-solid fa-shield-check" /> Full Refund Guarantee</div>
+                    <div className="guarantee-text">Minimum guarantee included — miss the agreed goals, get a full refund.</div>
+                  </div>
+
+                  <div className="highlight-text">We handle:</div>
+                  <ul className="package-features">
+                    <li><i className="fa-solid fa-check" /><strong>Strategy</strong></li>
+                    <li><i className="fa-solid fa-check" /><strong>Scripting</strong></li>
+                    <li><i className="fa-solid fa-check" /><strong>Shooting</strong></li>
+                    <li><i className="fa-solid fa-check" /><strong>Editing</strong></li>
+                    <li><i className="fa-solid fa-check" /><strong>Posting</strong></li>
+                  </ul>
+                  <div className="highlight-text" style={{ marginTop: 'auto' }}>
+                    Scaled multiple creators in this category<br />The fastest path to becoming a known creator.
+                  </div>
+                  <a href={getWaUrl('Complete Creator Growth')} target="_blank" rel="noopener noreferrer" className="package-btn btn-filled">Get Started</a>
+                </div>
+              </ScrollReveal>
+            </>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
