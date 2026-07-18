@@ -83,7 +83,7 @@ export default function PackagesSectionAdmin() {
       delete payload.packData;
 
       if (docId) {
-        await api.updateSectionData('packages-section', docId, payload);
+        if (docId) { await api.updateSectionData('packages-section', docId, payload); } else { await api.createSectionData('packages-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Packages section updated successfully');
       } else {
         const res = await api.createSectionData('packages-section', payload);
@@ -539,3 +539,4 @@ export default function PackagesSectionAdmin() {
     </div>
   );
 }
+

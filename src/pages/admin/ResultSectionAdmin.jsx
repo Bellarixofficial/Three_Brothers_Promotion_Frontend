@@ -73,7 +73,7 @@ export default function ResultSectionAdmin() {
       delete payload.clients;
 
       if (docId) {
-        await api.updateSectionData('result-section', docId, payload);
+        if (docId) { await api.updateSectionData('result-section', docId, payload); } else { await api.createSectionData('result-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Section updated successfully');
       } else {
         const res = await api.createSectionData('result-section', payload);
@@ -333,3 +333,4 @@ export default function ResultSectionAdmin() {
     </div>
   );
 }
+

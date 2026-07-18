@@ -62,7 +62,7 @@ export default function ContactSectionAdmin() {
       const payload = cleanPayload(data);
 
       if (docId) {
-        await api.updateSectionData('contact-section', docId, payload);
+        if (docId) { await api.updateSectionData('contact-section', docId, payload); } else { await api.createSectionData('contact-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Contact content updated successfully');
       } else {
         const res = await api.createSectionData('contact-section', payload);
@@ -218,3 +218,4 @@ export default function ContactSectionAdmin() {
     </div>
   );
 }
+

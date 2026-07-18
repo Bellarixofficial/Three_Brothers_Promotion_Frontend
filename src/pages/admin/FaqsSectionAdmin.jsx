@@ -69,7 +69,7 @@ export default function FaqsSectionAdmin() {
       delete payload.faqData;
 
       if (docId) {
-        await api.updateSectionData('faqs-section', docId, payload);
+        if (docId) { await api.updateSectionData('faqs-section', docId, payload); } else { await api.createSectionData('faqs-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Section updated successfully');
       } else {
         const res = await api.createSectionData('faqs-section', payload);
@@ -292,3 +292,4 @@ export default function FaqsSectionAdmin() {
     </div>
   );
 }
+

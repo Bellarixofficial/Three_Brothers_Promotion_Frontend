@@ -69,7 +69,7 @@ export default function ClientsSectionAdmin() {
       delete payload.video;
 
       if (docId) {
-        await api.updateSectionData('clients-section', docId, payload);
+        if (docId) { await api.updateSectionData('clients-section', docId, payload); } else { await api.createSectionData('clients-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Main content updated successfully');
       } else {
         const res = await api.createSectionData('clients-section', payload);
@@ -332,3 +332,4 @@ export default function ClientsSectionAdmin() {
     </div>
   );
 }
+

@@ -68,7 +68,7 @@ export default function StatSectionAdmin() {
       const payload = cleanPayload(data);
 
       if (docId) {
-        await api.updateSectionData('stat-section', docId, payload);
+        if (docId) { await api.updateSectionData('stat-section', docId, payload); } else { await api.createSectionData('stat-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Section updated successfully');
       } else {
         const res = await api.createSectionData('stat-section', payload);
@@ -265,3 +265,4 @@ export default function StatSectionAdmin() {
     </div>
   );
 }
+

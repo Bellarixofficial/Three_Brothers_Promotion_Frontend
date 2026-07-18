@@ -75,7 +75,7 @@ export default function TopBannerAdmin() {
       }
       
       if (docId) {
-        await api.updateSectionData('top-banner', docId, payload);
+        if (docId) { await api.updateSectionData('top-banner', docId, payload); } else { await api.createSectionData('top-banner', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Main content updated successfully');
       } else {
         const res = await api.createSectionData('top-banner', payload);
@@ -492,3 +492,4 @@ export default function TopBannerAdmin() {
     </div>
   );
 }
+

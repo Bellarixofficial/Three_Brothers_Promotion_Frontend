@@ -119,7 +119,12 @@ export default function HeroSectionAdmin() {
       const payload = cleanPayload(data);
       delete payload.teamMember;
       
-      await api.updateSectionData('hero-section', docId, payload);
+      if (docId) {
+        if (docId) { await api.updateSectionData('hero-section', docId, payload); } else { await api.createSectionData('hero-section', payload); if (typeof fetchData === "function") fetchData(); }
+      } else {
+        await api.createSectionData('hero-section', payload);
+        fetchData();
+      }
       setSuccess('Main content updated successfully');
       window.scrollTo(0, 0);
     } catch (err) {
@@ -546,3 +551,4 @@ export default function HeroSectionAdmin() {
     </div>
   );
 }
+

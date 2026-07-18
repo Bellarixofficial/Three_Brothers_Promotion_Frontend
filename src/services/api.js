@@ -61,8 +61,9 @@ export const api = {
       if (!res.ok) return null;
       const data = await res.json();
       // Usually returns an array of documents, we take the first one or the whole response based on API design
-      // If it's an array and not empty, return first item. Otherwise return data.
-      if (Array.isArray(data) && data.length > 0) return data[0];
+      if (Array.isArray(data)) {
+        return data.length > 0 ? data[0] : null;
+      }
       return data;
     } catch (error) {
       console.error(`Error fetching ${endpoint}:`, error);

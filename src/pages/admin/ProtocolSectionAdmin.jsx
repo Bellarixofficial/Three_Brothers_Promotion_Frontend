@@ -85,7 +85,7 @@ export default function ProtocolSectionAdmin() {
       delete payload.protocol;
 
       if (docId) {
-        await api.updateSectionData('protocol-section', docId, payload);
+        if (docId) { await api.updateSectionData('protocol-section', docId, payload); } else { await api.createSectionData('protocol-section', payload); if (typeof fetchData === "function") fetchData(); }
         setSuccess('Protocol section updated successfully');
       } else {
         const res = await api.createSectionData('protocol-section', payload);
@@ -390,3 +390,4 @@ export default function ProtocolSectionAdmin() {
     </div>
   );
 }
+
