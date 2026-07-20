@@ -1,58 +1,12 @@
-import { useState, useEffect } from 'react';
-import { api } from '../services/api';
+
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './TeamSection.css';
-import riya from '../assets/images/riya.jpg';
-import vibhav from '../assets/images/vibhav.jpg';
 
-const FOUNDERS = [
-  {
-    img: riya,
-    alt: 'Riya Upreti',
-    badges: [
-      { label: 'FOUNDER', cls: 'role-badge' },
-      { label: 'Personal Branding Expert', cls: 'role-badge expert-badge' },
-    ],
-    name: 'Riya Upreti',
-    bio: <>The creative force. Riya understands <span className="bio-highlight">audience psychology</span> better than anyone. She bridges the gap between raw emotion and strategic content.</>,
-    links: [
-      { href: 'https://www.instagram.com/riyaelity/', cls: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram' },
-      { href: 'https://www.linkedin.com/in/riya-upreti-213a04190/', cls: 'linkedin', icon: 'fa-brands fa-linkedin', label: 'LinkedIn' },
-    ],
-  },
-  {
-    img: vibhav,
-    alt: 'Vibhav Raj',
-    badges: [
-      { label: 'CO-FOUNDER', cls: 'role-badge co-founder-badge' },
-      { label: 'Personal Branding Expert', cls: 'role-badge expert-badge' },
-    ],
-    name: 'Vibhav Raj',
-    bio: <>The strategist. Founder of <span className="bio-highlight">LastRaven</span> and an engineering grad, Vibhav treats virality as a science to be engineered, not guessed.</>,
-    links: [
-      { href: 'https://www.instagram.com/fobet.media/', cls: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram' },
-      { href: 'https://www.linkedin.com/in/vibhav-raj-175622245/', cls: 'linkedin', icon: 'fa-brands fa-linkedin', label: 'LinkedIn' },
-    ],
-  },
-];
 
-export default function TeamSection() {
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await api.getSectionData('hero-section');
-        if (data) setApiData(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+
+export default function TeamSection({ apiData, loading }) {
 
   // Show ALL members (admins + team members) in the Team Section
   const teamMembers = apiData?.teamMember?.length > 0 ? apiData.teamMember.map(m => {
@@ -80,7 +34,7 @@ export default function TeamSection() {
       bio: m.desc || '',
       links: links
     };
-  }) : (loading ? [] : FOUNDERS);
+  }) : [];
 
   return (
     <div className="about-section-wrapper" id="team">
@@ -126,7 +80,7 @@ export default function TeamSection() {
                 <div className="member-card founder-card" style={{ width: '100%' }}>
                   <div className="avatar-wrapper">
                     <div className="founder-ring" />
-                    <img src={f.img || riya} alt={f.alt} className="avatar-img" decoding="async" />
+                    <img src={f.img} alt={f.alt} className="avatar-img" decoding="async" />
                   </div>
                   <div className="badges-row">
                     {f.badges.map((b) => (

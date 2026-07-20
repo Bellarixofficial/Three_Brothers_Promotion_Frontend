@@ -351,7 +351,7 @@ export default function HeroSectionAdmin() {
                 </select>
                 <input 
                   className="admin-form-control" 
-                  placeholder="91280 06318"
+                  placeholder="70200 61418"
                   value={waRawNumber} 
                   onChange={e => {
                     setWaRawNumber(e.target.value);

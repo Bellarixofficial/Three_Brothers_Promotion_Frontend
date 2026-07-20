@@ -22,9 +22,9 @@ export default function Footer() {
         <p className="footer-copy">
           &copy; {currentYear} Three Brothers Promotion. All rights reserved.
         </p>
-        <p className="footer-credit">
+        {/* <p className="footer-credit">
           created with 🧡 by <a href="https://harittech.vercel.app/" target="_blank" rel="noopener noreferrer" className="highlight-link">Harit Tech Solution</a>
-        </p>
+        </p> */}
       </div>
     </footer>
   );

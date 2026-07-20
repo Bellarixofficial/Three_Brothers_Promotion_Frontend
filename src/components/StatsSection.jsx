@@ -1,25 +1,9 @@
 import { useState, useEffect } from 'react';
-import { api } from '../services/api';
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './StatsSection.css';
 
-export default function StatsSection() {
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await api.getSectionData('stat-section');
-        if (data) setApiData(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+export default function StatsSection({ apiData, loading }) {
 
   return (
     <section className="two-day-section" id="stats">
@@ -34,24 +18,22 @@ export default function StatsSection() {
             ) : (
               <>
                 <i className={apiData?.statIcon || "fa-solid fa-rocket"} /> &nbsp;
-                {apiData?.statTag || 'Done for you services'}
+                {apiData?.statTag || ''}
               </>
             )}
           </div>
           <h2>
-            {loading ? <Skeleton width="80%" height="1.5em" /> : (apiData?.heading || 'Just 2 Days In A Month')}
+            {loading ? <Skeleton width="80%" height="1.5em" /> : (apiData?.heading || '')}
           </h2>
           <p className="sub-heading">
-            {loading ? <Skeleton width="60%" /> : (apiData?.subHeading1 || 'for creating impactful personal brands')}
+            {loading ? <Skeleton width="60%" /> : (apiData?.subHeading1 || '')}
           </p>
           <p className="sub-heading" style={{ marginTop: '15px' }}>
             {loading ? (
               <Skeleton width="90%" />
             ) : apiData?.subHeading2 ? (
               <strong>{apiData.subHeading2}</strong>
-            ) : (
-              <strong>Generate Revenue, Increase Followers, Gain Massive Reach</strong>
-            )}
+            ) : null}
           </p>
         </ScrollReveal>
 
@@ -67,8 +49,8 @@ export default function StatsSection() {
               ) : (
                 <>
                   <div>
-                    <h4 className="stat-value">{apiData?.card1?.field1 || '10M+'}</h4>
-                    <p className="stat-label">{apiData?.card1?.field2 || 'Revenue Generated'}</p>
+                    <h4 className="stat-value">{apiData?.card1?.field1 || ''}</h4>
+                    <p className="stat-label">{apiData?.card1?.field2 || ''}</p>
                   </div>
                   <i className={`${apiData?.card1?.field3 || 'fa-solid fa-dollar-sign'} icon-float`} style={{ color: '#fbbf24' }} />
                   <svg className="sparkline" viewBox="0 0 100 40">
@@ -91,8 +73,8 @@ export default function StatsSection() {
                     </>
                   ) : (
                     <>
-                      <h3>{apiData?.card2?.field1 || '50M+'}</h3>
-                      <p>{apiData?.card2?.field2 || 'Followers'}</p>
+                      <h3>{apiData?.card2?.field1 || ''}</h3>
+                      <p>{apiData?.card2?.field2 || ''}</p>
                     </>
                   )}
                 </div>
@@ -111,8 +93,8 @@ export default function StatsSection() {
               ) : (
                 <>
                   <div>
-                    <h4 className="stat-value">{apiData?.card3?.field1 || '500M+'}</h4>
-                    <p className="stat-label">{apiData?.card3?.field2 || 'Views Generated'}</p>
+                    <h4 className="stat-value">{apiData?.card3?.field1 || ''}</h4>
+                    <p className="stat-label">{apiData?.card3?.field2 || ''}</p>
                   </div>
                   <i className={`${apiData?.card3?.field3 || 'fa-solid fa-eye'} icon-float`} style={{ color: '#22d3ee' }} />
                   <svg className="sparkline" viewBox="0 0 100 40">

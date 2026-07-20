@@ -3,77 +3,35 @@ import { api } from '../services/api';
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './HeroSection.css';
-import heroBg1 from '../assets/images/hero-bg-1.png';
-import heroBg2 from '../assets/images/hero-bg-2.png';
 import logoImg from '../assets/images/logo1.png';
 
-const WA_URL = 'https://wa.me/917028654498?text=Hi%2C%20I%20would%20like%20to%20book%20a%20discovery%20call.';
+const WA_URL = 'https://wa.me/917020061418?text=Hi%2C%20I%20would%20like%20to%20book%20a%20discovery%20call.';
 
-const FOUNDERS = [
-  {
-    key: 'riya',
-    name: 'Riya Upreti',
-    label: 'Founder',
-    img: heroBg1,
-    imgClass: 'founder-img riya',
-    card1Heading: 'Mega Creator',
-    card1Text: '2.5M Followers',
-    card2Heading: '100M+',
-    card2Text: 'Views',
-  },
-  {
-    key: 'vibhav',
-    name: 'Vibhav Raj',
-    label: 'Co-Founder',
-    img: heroBg2,
-    imgClass: 'founder-img vibhav',
-    card1Heading: 'Personal Branding Expert',
-    card1Text: '',
-    card2Heading: 'Scaled 70+ Clients to 7 Figures',
-    card2Text: '',
-  },
-];
-
-export default function HeroSection() {
+export default function HeroSection({ apiData, loading }) {
   const [current, setCurrent] = useState(0);
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const timerRef = useRef(null);
   const cursorRef = useRef(null);
   const touchStartX = useRef(0);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await api.getSectionData('hero-section');
-        if (data) setApiData(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
-
   const activeFounders = apiData?.teamMember?.length > 0
     ? apiData.teamMember
-        .filter(m => !m.mainRole || m.mainRole === 'admin')
-        .map((m, i) => ({
-          key: m._id || `member-${i}`,
-          name: m.name,
-          label: m.role,
-          img: m.image,
-          imgClass: i === 0 ? 'founder-img riya' : 'founder-img vibhav',
-          badge: m.badge,
-          instagramId: m.instagramId,
-          linkedInId: m.linkedInId,
-          desc: m.desc,
-          card1Heading: m.card1Heading,
-          card1Text: m.card1Text,
-          card2Heading: m.card2Heading,
-          card2Text: m.card2Text,
-        }))
-    : (loading ? [] : FOUNDERS);
+      .filter(m => !m.mainRole || m.mainRole === 'admin')
+      .map((m, i) => ({
+        key: m._id || `member-${i}`,
+        name: m.name,
+        label: m.role,
+        img: m.image,
+        imgClass: i === 0 ? 'founder-img riya' : 'founder-img vibhav',
+        badge: m.badge,
+        instagramId: m.instagramId,
+        linkedInId: m.linkedInId,
+        desc: m.desc,
+        card1Heading: m.card1Heading,
+        card1Text: m.card1Text,
+        card2Heading: m.card2Heading,
+        card2Text: m.card2Text,
+      }))
+    : [];
 
   // Auto-slide
   useEffect(() => {
@@ -143,7 +101,7 @@ export default function HeroSection() {
                   <img src={logoImg} alt="TB" style={{ width: '85%', height: '85%', objectFit: 'contain' }} />
                 </div>
                 <span className="logo-text">
-                  {loading ? <Skeleton width="150px" height="1.2em" /> : (apiData?.heroTag || 'Three Brothers Promotions')}
+                  {loading ? <Skeleton width="150px" height="1.2em" /> : (apiData?.heroTag || '')}
                 </span>
               </div>
             </ScrollReveal>
@@ -181,22 +139,7 @@ export default function HeroSection() {
                     )}
                   </>
                 ) : (
-                  <>
-                    We make your business<br />
-                    <span className="gradient-text">impossible to</span>{' '}
-                    <span className="underline-wrapper">
-                      <span className="gradient-text">ignore.</span>
-                      <svg className="svg-underline" viewBox="0 0 200 9" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id="underlineGradientDefault" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#8b5cf6" />
-                            <stop offset="100%" stopColor="#6366f1" />
-                          </linearGradient>
-                        </defs>
-                        <path d="M2.00025 6.99997C25.7501 2.99991 74.8003 7.50002 99.0003 4.49997C124 1.50002 150.908 -0.999992 198.001 2.50001" stroke="url(#underlineGradientDefault)" strokeWidth="3" strokeLinecap="round" />
-                      </svg>
-                    </span>
-                  </>
+                  null
                 )}
               </div>
             </ScrollReveal>
@@ -204,7 +147,7 @@ export default function HeroSection() {
             <ScrollReveal delay={200} style={{ marginBottom: '40px' }}>
               <div>
                 <h1 className="hero-description" style={{ marginBottom: '8px' }}>
-                  {loading ? <Skeleton width="80%" /> : (apiData?.heroDesc1 || 'Done-for-you Personal Branding Agency that converts strangers into customers.')}
+                  {loading ? <Skeleton width="80%" /> : (apiData?.heroDesc1 || '')}
                 </h1>
                 {loading ? (
                   <Skeleton width="60%" />

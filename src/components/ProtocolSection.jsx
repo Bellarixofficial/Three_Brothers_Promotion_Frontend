@@ -1,44 +1,14 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { api } from '../services/api';
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './ProtocolSection.css';
 
-import p1 from '../assets/images/protocol/01.jpg';
-import p2 from '../assets/images/protocol/02.jpg';
-import p3 from '../assets/images/protocol/03.jpg';
-import p4 from '../assets/images/protocol/04.jpg';
-import p5 from '../assets/images/protocol/05.jpg';
-import p6 from '../assets/images/protocol/06.jpg';
 
-const STEPS = [
-  { icon: 'fa-solid fa-magnifying-glass', title: 'Deep-Dive Discovery', img: p1, desc: 'We analyze your niche, competitors, and target audience to uncover your unique angle and positioning strategy.' },
-  { icon: 'fa-solid fa-pen-nib', title: 'Script & Content Planning', img: p2, desc: 'Our team crafts 25–30 targeted scripts per month, optimized for hooks, retention, and your audience psychology.' },
-  { icon: 'fa-solid fa-clapperboard', title: 'Studio Shoot Days', img: p3, desc: 'Just 2 days a month in our studio. We direct, prompt, and shoot everything — you just show up and be yourself.' },
-  { icon: 'fa-solid fa-wand-magic-sparkles', title: 'Pro Editing & Post', img: p4, desc: 'High-retention editing with captions, sound design, B-roll, and platform-specific formatting for maximum reach.' },
-  { icon: 'fa-solid fa-chart-line', title: 'Strategy & Optimization', img: p5, desc: 'Weekly analytics review, trend monitoring, and algorithm adaptation keeps your content performing at peak levels.' },
-  { icon: 'fa-solid fa-rocket', title: 'Scale to 100K & Beyond', img: p6, desc: 'With our guaranteed framework, you hit 100K followers in 6 months — or we work free until you do.' },
-];
 
-export default function ProtocolSection() {
+export default function ProtocolSection({ apiData, loading }) {
   const containerRef = useRef(null);
   const fillRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(-1);
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await api.getSectionData('protocol-section');
-        if (data) setApiData(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
 
   const activeSteps = useMemo(() => {
     if (apiData?.protocol?.length > 0) {
@@ -49,7 +19,7 @@ export default function ProtocolSection() {
         desc: p.desc
       }));
     }
-    return loading ? [] : STEPS;
+    return [];
   }, [apiData, loading]);
 
   useEffect(() => {
@@ -102,7 +72,7 @@ export default function ProtocolSection() {
 
       <ScrollReveal className="timeline-header">
         <div className="timeline-badge">
-          {loading ? <Skeleton width="120px" height="1em" /> : (apiData?.protocolTag || 'THE FOBET PROTOCOL')}
+          {loading ? <Skeleton width="120px" height="1em" /> : (apiData?.protocolTag || '')}
         </div>
         <h2 className="timeline-title">
           {loading ? (
@@ -111,14 +81,10 @@ export default function ProtocolSection() {
             <>
               {apiData.heading1} <span className="gradient-text">{apiData.heading2}</span>
             </>
-          ) : (
-            <>
-              Our <span className="gradient-text">6-Step</span> Growth Framework
-            </>
-          )}
+          ) : null}
         </h2>
         <p className="timeline-desc">
-          {loading ? <Skeleton width="80%" /> : (apiData?.desc || 'A battle-tested system that transforms everyday people into powerful personal brands.')}
+          {loading ? <Skeleton width="80%" /> : (apiData?.desc || '')}
         </p>
       </ScrollReveal>
 

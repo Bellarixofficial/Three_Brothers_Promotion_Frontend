@@ -1,32 +1,9 @@
-import { useState, useEffect } from 'react';
-import { api } from '../services/api';
+
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './PackagesSection.css';
 
-export default function PackagesSection() {
-  const [apiData, setApiData] = useState(null);
-  const [heroData, setHeroData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const [packRes, heroRes] = await Promise.all([
-          api.getSectionData('packages-section'),
-          api.getSectionData('hero-section')
-        ]);
-        if (packRes) setApiData(packRes);
-        if (heroRes) setHeroData(heroRes);
-      } catch (err) {
-        console.error("Failed to load section data in PackagesSection", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+export default function PackagesSection({ apiData, loading, heroData }) {
 
   const phone = heroData?.whatsappNumber ? heroData.whatsappNumber.replace(/\D/g, '') : '917020061418';
 
@@ -52,7 +29,7 @@ export default function PackagesSection() {
 
         <ScrollReveal className="packages-header">
           <div className="packages-badge">
-            {loading ? <Skeleton width="120px" height="1em" /> : (apiData?.packTag || 'PRICING PLANS')}
+            {loading ? <Skeleton width="120px" height="1em" /> : (apiData?.packTag || '')}
           </div>
           <h2 className="packages-title">
             {loading ? (
@@ -61,15 +38,9 @@ export default function PackagesSection() {
               <>
                 {apiData.heading1} <span className="gradient-text">{apiData.heading2}</span>
               </>
-            ) : (
-              <>
-                Our <span className="gradient-text">Packages</span>
-              </>
-            )}
+            ) : null}
           </h2>
-          <p className="packages-desc">
-            {loading ? <Skeleton width="80%" /> : (apiData?.desc || 'Choose the package that fits your growth stage')}
-          </p>
+            {loading ? <Skeleton width="80%" /> : (apiData?.desc || '')}
         </ScrollReveal>
 
         <div className="packages-row">
@@ -127,61 +98,7 @@ export default function PackagesSection() {
                 </div>
               </ScrollReveal>
             ))
-          ) : (
-            <>
-              {/* Card 1: 1:1 Mentorship */}
-              <ScrollReveal style={{ flex: 1, minWidth: '320px', maxWidth: '400px', display: 'flex' }} delay={0}>
-                <div className="package-card" style={{ width: '100%' }}>
-                  <div className="package-name">1:1 Mentorship Session</div>
-                  <div className="package-price">₹45,000</div>
-                  <p className="package-desc">A direct clarity session to fix your brand direction.</p>
-                  <div className="package-line" />
-                  <div className="highlight-text">with Vibhav Raj</div>
-                  <ul className="package-features">
-                    <li><i className="fa-solid fa-check" />Brand positioning: who you are &amp; how people should see you</li>
-                    <li><i className="fa-solid fa-check" />Clear content pillars &amp; storytelling style</li>
-                    <li><i className="fa-solid fa-check" />Exact audience &amp; niche clarity</li>
-                    <li><i className="fa-solid fa-check" />6-month growth roadmap</li>
-                    <li><i className="fa-solid fa-check" />Script &amp; hook structuring</li>
-                    <li><i className="fa-solid fa-check" />Shoot style, what to avoid, on-camera guidance</li>
-                    <li><i className="fa-solid fa-check" />Page audit: what's working vs what's blocking growth</li>
-                    <li><i className="fa-solid fa-check" />Monetisation plan: brand deals, courses, consulting</li>
-                  </ul>
-                  <div className="highlight-text" style={{ marginTop: 'auto' }}>A personalised blueprint for YOUR growth.</div>
-                  <a href={getWaUrl('1:1 Mentorship Session')} target="_blank" rel="noopener noreferrer" className="package-btn btn-outline">Get Started</a>
-                </div>
-              </ScrollReveal>
-
-              {/* Card 2: Complete Creator Growth (featured) */}
-              <ScrollReveal style={{ flex: 1, minWidth: '320px', maxWidth: '400px', display: 'flex' }} delay={150}>
-                <div className="package-card featured" style={{ width: '100%' }}>
-                  <div className="package-tag tag-popular">Most Popular</div>
-                  <div className="package-name">Complete Creator Growth</div>
-                  <div className="package-price">₹4,00,000<span>/month</span></div>
-                  <p className="package-desc">Done-for-you creator growth. You just show up.</p>
-                  <div className="package-line" />
-
-                  <div className="guarantee-box">
-                    <div className="guarantee-title"><i className="fa-solid fa-shield-check" /> Full Refund Guarantee</div>
-                    <div className="guarantee-text">Minimum guarantee included — miss the agreed goals, get a full refund.</div>
-                  </div>
-
-                  <div className="highlight-text">We handle:</div>
-                  <ul className="package-features">
-                    <li><i className="fa-solid fa-check" /><strong>Strategy</strong></li>
-                    <li><i className="fa-solid fa-check" /><strong>Scripting</strong></li>
-                    <li><i className="fa-solid fa-check" /><strong>Shooting</strong></li>
-                    <li><i className="fa-solid fa-check" /><strong>Editing</strong></li>
-                    <li><i className="fa-solid fa-check" /><strong>Posting</strong></li>
-                  </ul>
-                  <div className="highlight-text" style={{ marginTop: 'auto' }}>
-                    Scaled multiple creators in this category<br />The fastest path to becoming a known creator.
-                  </div>
-                  <a href={getWaUrl('Complete Creator Growth')} target="_blank" rel="noopener noreferrer" className="package-btn btn-filled">Get Started</a>
-                </div>
-              </ScrollReveal>
-            </>
-          )}
+          ) : null}
         </div>
       </section>
     </div>

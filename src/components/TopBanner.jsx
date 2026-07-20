@@ -4,7 +4,6 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaCode, FaMobile, FaArrowRight, F
 import { SiGoogleads } from 'react-icons/si';
 import { HiOutlineSpeakerphone } from 'react-icons/hi';
 import { FaMeta } from 'react-icons/fa6';
-import { api } from '../services/api';
 
 const renderIcon = (iconName) => {
   switch (iconName) {
@@ -30,12 +29,11 @@ const renderSocialIcon = (platform) => {
   }
 };
 
-const TopBanner = () => {
+const TopBanner = ({ apiData, loading, heroData }) => {
   const [slideIndex, setSlideIndex] = useState(1);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
-  const [heroData, setHeroData] = useState(null);
-  const [bannerData, setBannerData] = useState(null);
-  const [services, setServices] = useState([]);
+  const services = apiData?.services || [];
+  const bannerData = apiData;
   const timerRef = useRef(null);
   const touchStartX = useRef(0);
 
@@ -59,32 +57,7 @@ const TopBanner = () => {
     return () => stopAutoSlide();
   }, [services]);
 
-  useEffect(() => {
-    const loadHero = async () => {
-      try {
-        const data = await api.getSectionData('hero-section');
-        if (data) setHeroData(data);
-      } catch (err) {
-        console.error("Failed to load hero section data in TopBanner", err);
-      }
-    };
-    loadHero();
 
-    const loadBanner = async () => {
-      try {
-        const data = await api.getSectionData('top-banner');
-        if (data) {
-          setBannerData(data);
-          if (data.services && data.services.length > 0) {
-            setServices(data.services);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load top banner data", err);
-      }
-    };
-    loadBanner();
-  }, []);
 
   const displayServices = services.length > 0 ? [
     services[services.length - 1], // Clone of last item (D)
@@ -161,8 +134,18 @@ const TopBanner = () => {
     window.open(waUrl, '_blank');
   };
 
+  if (loading) {
+    return (
+      <div className="top-banner-wrapper" id="top-banner">
+        <div className="top-bar-container" style={{ padding: '10px 0' }}>
+          <div className="announcement-pill" style={{ opacity: 0.5 }}>Loading updates...</div>
+        </div>
+      </div>
+    );
+  }
+
   if (services.length === 0 && !bannerData) {
-    return null; // or a loader
+    return null;
   }
 
   const activeIndex = services.length > 0 ? (slideIndex - 1 + services.length) % services.length : 0;
@@ -214,9 +197,7 @@ const TopBanner = () => {
                     {i !== bannerData.title1.split('\\n').length - 1 && <br />}
                   </React.Fragment>
                 ))
-              ) : (
-                <>Solutions That<br />Drive </>
-              )}
+              ) : null}
               {bannerData?.titleHighlight && <span className="highlight"> {bannerData.titleHighlight}</span>}
             </h2>
           </div>

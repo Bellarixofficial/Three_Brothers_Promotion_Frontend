@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react';
-import { api } from '../services/api';
 import Skeleton from './Skeleton';
 import ScrollReveal from './ScrollReveal';
 import './ContactSection.css';
-import contactImg from '../assets/images/contact.jpeg';
 
-const WA_URL = 'https://wa.me/919128006318';
+const WA_URL = 'https://wa.me/917020061418';
 
 const PARTICLES = [
   { left: '10%', animationDelay: '0s' },
@@ -15,32 +12,9 @@ const PARTICLES = [
   { left: '82%', animationDelay: '9s' },
 ];
 
-export default function ContactSection() {
-  const [apiData, setApiData] = useState(null);
-  const [whatsappUrl, setWhatsappUrl] = useState('');
-  const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const data = await api.getSectionData('contact-section');
-        if (data) setApiData(data);
-
-        const heroData = await api.getSectionData('hero-section');
-        if (heroData && heroData.whatsappUrl) {
-          setWhatsappUrl(heroData.whatsappUrl);
-        }
-        if (heroData && heroData.whatsappNumber) {
-          setWhatsappNumber(heroData.whatsappNumber);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+export default function ContactSection({ apiData, loading, heroData }) {
+  const whatsappUrl = heroData?.whatsappUrl || '';
+  const whatsappNumber = heroData?.whatsappNumber || '';
 
   return (
     <div className="contact-section-wrapper" id="contact">
@@ -60,14 +34,14 @@ export default function ContactSection() {
               {loading ? (
                 <Skeleton type="rect" height="400px" />
               ) : (
-                <img src={apiData?.image || contactImg} alt="Contact Three Brothers Promotion" decoding="async" />
+                <img src={apiData?.image} alt="Contact Three Brothers Promotion" decoding="async" />
               )}
             </div>
           </ScrollReveal>
 
           <ScrollReveal className="contact-text" delay={150}>
             <div className="contact-badge">
-              {loading ? <Skeleton width="100px" height="1em" /> : (apiData?.contactTag || 'GET IN TOUCH')}
+              {loading ? <Skeleton width="100px" height="1em" /> : (apiData?.contactTag || '')}
             </div>
             <h2>
               {loading ? (
@@ -76,11 +50,7 @@ export default function ContactSection() {
                 <>
                   {apiData.heading1} <span className="gradient-text">{apiData.heading2}</span>
                 </>
-              ) : (
-                <>
-                  Contact <span className="gradient-text">Us</span>
-                </>
-              )}
+              ) : null}
             </h2>
             <div style={{ marginBottom: '20px' }}>
               {loading ? (
@@ -97,11 +67,7 @@ export default function ContactSection() {
                     ) : (
                       apiData.desc1
                     )
-                  ) : (
-                    <>
-                      Have questions about our packages or want to see if we're a good fit? We're available <strong>24/7</strong> to help you scale.
-                    </>
-                  )}
+                  ) : null}
                   {apiData?.desc2 && (
                     <>
                       <br /><br />
@@ -110,12 +76,6 @@ export default function ContactSection() {
                       ) : (
                         apiData.desc2
                       )}
-                    </>
-                  )}
-                  {!apiData?.desc1 && !apiData?.desc2 && (
-                    <>
-                      <br /><br />
-                      Reach us anytime on WhatsApp.
                     </>
                   )}
                 </p>
@@ -133,7 +93,7 @@ export default function ContactSection() {
                 <Skeleton width="150px" height="1em" />
               ) : (
                 <>
-                  <i className="fa-brands fa-whatsapp" /> WhatsApp: <strong>{whatsappNumber || '+91 91280 06318'}</strong>
+                  <i className="fa-brands fa-whatsapp" /> WhatsApp: <strong>{whatsappNumber}</strong>
                 </>
               )}
             </div>
