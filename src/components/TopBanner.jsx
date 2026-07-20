@@ -40,7 +40,11 @@ const TopBanner = ({ apiData, loading, heroData }) => {
   const startAutoSlide = () => {
     stopAutoSlide();
     timerRef.current = setInterval(() => {
-      setSlideIndex((prev) => prev + 1);
+      if (document.hidden) return; // Prevent sliding when tab is inactive
+      setSlideIndex((prev) => {
+        if (prev >= services.length + 1) return 1; // Safety clamp
+        return prev + 1;
+      });
     }, 5000);
   };
 
